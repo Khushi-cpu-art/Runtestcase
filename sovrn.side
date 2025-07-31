@@ -1,250 +1,466 @@
 {
-  "id": "e1a970c1-5c39-4a78-b92e-5b6eba822db4",
-  "version": "2.0",
-  "name": "https://sovrn.co/115myze",
-  "url": "https://www.nykaa.com",
-  "tests": [{
-    "id": "e0b63f03-0548-4fb8-bff9-d32650a9ac23",
-    "name": "1",
-    "commands": [{
-      "id": "737e8f17-4e30-4ca2-8770-b89e03d700fb",
-      "comment": "",
-      "command": "open",
-      "target": "/",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "058c28ed-c764-43a6-8771-ffc5cd77f685",
-      "comment": "",
-      "command": "setWindowSize",
-      "target": "1054x800",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "d82d755a-82dd-47d2-b47e-2462098722d4",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,432.79998779296875)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "eb0d87d9-fb3d-4b0c-8b0b-c2cd71a35a00",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,968.7999877929688)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "0d9debfd-5dd0-4e59-9819-36226409d142",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,1331.199951171875)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "29e53775-6e05-43b6-b1ae-2797998d1011",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,1642.4000244140625)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "19832510-bbf8-4f8c-b9ef-de0bda78ab9c",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,1708)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "a8d844b1-681b-4347-a028-6b210a7ee470",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,1995.199951171875)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "859669ec-84e0-4608-b7f7-596a2e80ad0e",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,2488)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "09cd7adb-c45b-4946-83ab-9c271ecb1298",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,856)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "62816c32-54fd-4f1c-843e-904fece276b8",
-      "comment": "",
-      "command": "click",
-      "target": "css=#\\36 33fb748150ee4d51406b462 .outline-wrapper",
-      "targets": [
-        ["css=#\\36 33fb748150ee4d51406b462 .outline-wrapper", "css:finder"],
-        ["xpath=//div[@id='633fb748150ee4d51406b462']/div/div/div[3]", "xpath:idRelative"],
-        ["xpath=//div[2]/div/div/div/div/div/div/div[3]", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "14e2329b-ba41-4da1-ac39-5606abcba0a4",
-      "comment": "",
-      "command": "click",
-      "target": "css=.show .css-iyqsry",
-      "targets": [
-        ["css=.show .css-iyqsry", "css:finder"],
-        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
-        ["xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]", "xpath:idRelative"],
-        ["xpath=//button[2]", "xpath:position"],
-        ["xpath=//button[contains(.,'Preview Size')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "a395afde-b25a-42e2-95d9-bdb21cba9f3d",
-      "comment": "",
-      "command": "click",
-      "target": "css=.css-18kcb49:nth-child(4) .css-1dy5v6t",
-      "targets": [
-        ["css=.css-18kcb49:nth-child(4) .css-1dy5v6t", "css:finder"],
-        ["xpath=//div[@id='custom-scroll']/li[4]/label/div", "xpath:idRelative"],
-        ["xpath=//li[4]/label/div", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "4342e4ae-dfba-4d3c-8435-029cd16c1772",
-      "comment": "",
-      "command": "click",
-      "target": "css=.css-fe38g",
-      "targets": [
-        ["css=.css-fe38g", "css:finder"],
-        ["xpath=(//button[@type='button'])[2]", "xpath:attributes"],
-        ["xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button", "xpath:idRelative"],
-        ["xpath=//div[2]/div/div/div/div[2]/div/button", "xpath:position"],
-        ["xpath=//button[contains(.,'Add to Bag')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "1dfb883e-131b-49fc-a67a-a72437bf633a",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "css=.show .css-iyqsry",
-      "targets": [
-        ["css=.show .css-iyqsry", "css:finder"],
-        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
-        ["xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]", "xpath:idRelative"],
-        ["xpath=//button[2]", "xpath:position"],
-        ["xpath=//button[contains(.,'Preview Size')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "304fce86-4bfb-4da7-bc0e-f8a864206124",
-      "comment": "",
-      "command": "mouseOut",
-      "target": "css=.show .css-iyqsry",
-      "targets": [
-        ["css=.show .css-iyqsry", "css:finder"],
-        ["xpath=(//button[@type='button'])[3]", "xpath:attributes"],
-        ["xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]", "xpath:idRelative"],
-        ["xpath=//button[2]", "xpath:position"],
-        ["xpath=//button[contains(.,'Preview Size')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "19c33c0c-b55a-4590-b2f9-f8faada11f38",
-      "comment": "",
-      "command": "click",
-      "target": "css=#beauty_advice > a",
-      "targets": [
-        ["css=#beauty_advice > a", "css:finder"],
-        ["xpath=//a[contains(text(),'beauty advice')]", "xpath:link"],
-        ["xpath=//li[@id='beauty_advice']/a", "xpath:idRelative"],
-        ["xpath=//ul[5]/li/a", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "a934d504-e6c4-4c4b-970f-4e808eb87155",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "css=.brandHeadingbox:nth-child(1)",
-      "targets": [
-        ["css=.brandHeadingbox:nth-child(1)", "css:finder"],
-        ["xpath=//a[contains(text(),'Popular')]", "xpath:link"],
-        ["xpath=//div[@id='headerMenu']/div/ul[2]/li/ul/li/section[2]/div/a", "xpath:idRelative"],
-        ["xpath=(//a[contains(@href, '/')])[3687]", "xpath:href"],
-        ["xpath=//section[2]/div/a", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "ab66cbdf-3426-43fd-b2ec-8bf7dbc67717",
-      "comment": "",
-      "command": "doubleClick",
-      "target": "linkText=Nyri",
-      "targets": [
-        ["linkText=Nyri", "linkText"],
-        ["css=.glamnfitstoreBox:nth-child(1) li:nth-child(1) > a", "css:finder"],
-        ["xpath=//a[contains(text(),'Nyri')]", "xpath:link"],
-        ["xpath=//div[@id='NykaaDesignStudio']/div/div[4]/div/ul/li/a", "xpath:idRelative"],
-        ["xpath=//a[contains(@href, 'https://www.nykaafashion.com/designers/nyri/c/14963')]", "xpath:href"],
-        ["xpath=//ul[4]/li/ul/li/section/div/div/div/div[4]/div/ul/li/a", "xpath:position"],
-        ["xpath=//a[contains(.,'Nyri')]", "xpath:innerText"]
-      ],
-      "value": ""
-    }, {
-      "id": "48426b17-5804-4ee0-bbd4-4ac474f2fa1a",
-      "comment": "",
-      "command": "click",
-      "target": "css=.css-mbegxw .css-oryfdq:nth-child(1) > .css-1w3aihp",
-      "targets": [
-        ["css=.css-mbegxw .css-oryfdq:nth-child(1) > .css-1w3aihp", "css:finder"],
-        ["xpath=(//img[@alt='Banner Image'])[3]", "xpath:img"],
-        ["xpath=//main[@id='mainContent']/div[2]/div[4]/div/a/img", "xpath:idRelative"],
-        ["xpath=//div[4]/div/a/img", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "8e553bee-98b1-46d2-813f-b8ed18d0b647",
-      "comment": "",
-      "command": "mouseOver",
-      "target": "id=1",
-      "targets": [
-        ["id=1", "id"],
-        ["css=.css-0:nth-child(2) .plp-prod:nth-child(1) #\\31", "css:finder"],
-        ["xpath=//img[@alt='Twenty Dresses by Nykaa Fashion-Beige Solid Lapel Collar Jumpsuit with Belt (Set of 2)-1']", "xpath:img"],
-        ["xpath=//img[@id='1']", "xpath:attributes"],
-        ["xpath=//main[@id='mainContent']/div[4]/div/div/div[2]/div/div/a/section/div/div/div/div/img", "xpath:idRelative"],
-        ["xpath=//div/img", "xpath:position"]
-      ],
-      "value": ""
-    }, {
-      "id": "29a09774-2995-4c98-8209-6d4f92d717d5",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,106.4000015258789)",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "67ee7a85-e02a-4125-b3eb-9dddc6cdde4e",
-      "comment": "",
-      "command": "click",
-      "target": "id=1",
-      "targets": [
-        ["id=1", "id"],
-        ["css=.css-0:nth-child(2) .plp-prod:nth-child(1) #\\31", "css:finder"],
-        ["xpath=//img[@alt='Twenty Dresses by Nykaa Fashion-Beige Solid Lapel Collar Jumpsuit with Belt (Set of 2)-1']", "xpath:img"],
-        ["xpath=//img[@id='1']", "xpath:attributes"],
-        ["xpath=//main[@id='mainContent']/div[4]/div/div/div[2]/div/div/a/section/div/div/div/div/img", "xpath:idRelative"],
-        ["xpath=//section/div/div/div/div/img", "xpath:position"]
-      ],
-  }],
-  "suites": [{
-    "id": "0418e6c2-5824-41d2-9195-2bfd8742550a",
-    "name": "Default Suite",
-    "persistSession": false,
-    "parallel": false,
-    "timeout": 300,
-    "tests": ["e0b63f03-0548-4fb8-bff9-d32650a9ac23"]
-  }],
-  "urls": ["https://www.nykaa.com/"],
-  "plugins": []
+    "id": "e1a970c1-5c39-4a78-b92e-5b6eba822db4",
+    "version": "2.0",
+    "name": "https://sovrn.co/115myze",
+    "url": "https://www.nykaa.com",
+    "tests": [
+        {
+            "id": "e0b63f03-0548-4fb8-bff9-d32650a9ac23",
+            "name": "1",
+            "commands": [
+                {
+                    "id": "737e8f17-4e30-4ca2-8770-b89e03d700fb",
+                    "comment": "",
+                    "command": "open",
+                    "target": "/",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "058c28ed-c764-43a6-8771-ffc5cd77f685",
+                    "comment": "",
+                    "command": "setWindowSize",
+                    "target": "1054x800",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "d82d755a-82dd-47d2-b47e-2462098722d4",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,432.79998779296875)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "eb0d87d9-fb3d-4b0c-8b0b-c2cd71a35a00",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,968.7999877929688)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "0d9debfd-5dd0-4e59-9819-36226409d142",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,1331.199951171875)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "29e53775-6e05-43b6-b1ae-2797998d1011",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,1642.4000244140625)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "19832510-bbf8-4f8c-b9ef-de0bda78ab9c",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,1708)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "a8d844b1-681b-4347-a028-6b210a7ee470",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,1995.199951171875)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "859669ec-84e0-4608-b7f7-596a2e80ad0e",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,2488)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "09cd7adb-c45b-4946-83ab-9c271ecb1298",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,856)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "62816c32-54fd-4f1c-843e-904fece276b8",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=#\\36 33fb748150ee4d51406b462 .outline-wrapper",
+                    "targets": [
+                        [
+                            "css=#\\36 33fb748150ee4d51406b462 .outline-wrapper",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//div[@id='633fb748150ee4d51406b462']/div/div/div[3]",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//div[2]/div/div/div/div/div/div/div[3]",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "14e2329b-ba41-4da1-ac39-5606abcba0a4",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=.show .css-iyqsry",
+                    "targets": [
+                        [
+                            "css=.show .css-iyqsry",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=(//button[@type='button'])[3]",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//button[2]",
+                            "xpath:position"
+                        ],
+                        [
+                            "xpath=//button[contains(.,'Preview Size')]",
+                            "xpath:innerText"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "a395afde-b25a-42e2-95d9-bdb21cba9f3d",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=.css-18kcb49:nth-child(4) .css-1dy5v6t",
+                    "targets": [
+                        [
+                            "css=.css-18kcb49:nth-child(4) .css-1dy5v6t",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//div[@id='custom-scroll']/li[4]/label/div",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//li[4]/label/div",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "4342e4ae-dfba-4d3c-8435-029cd16c1772",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=.css-fe38g",
+                    "targets": [
+                        [
+                            "css=.css-fe38g",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=(//button[@type='button'])[2]",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//div[2]/div/div/div/div[2]/div/button",
+                            "xpath:position"
+                        ],
+                        [
+                            "xpath=//button[contains(.,'Add to Bag')]",
+                            "xpath:innerText"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "1dfb883e-131b-49fc-a67a-a72437bf633a",
+                    "comment": "",
+                    "command": "mouseOver",
+                    "target": "css=.show .css-iyqsry",
+                    "targets": [
+                        [
+                            "css=.show .css-iyqsry",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=(//button[@type='button'])[3]",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//button[2]",
+                            "xpath:position"
+                        ],
+                        [
+                            "xpath=//button[contains(.,'Preview Size')]",
+                            "xpath:innerText"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "304fce86-4bfb-4da7-bc0e-f8a864206124",
+                    "comment": "",
+                    "command": "mouseOut",
+                    "target": "css=.show .css-iyqsry",
+                    "targets": [
+                        [
+                            "css=.show .css-iyqsry",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=(//button[@type='button'])[3]",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//div[@id='product-list-wrap']/div/div/div[2]/div/button[2]",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//button[2]",
+                            "xpath:position"
+                        ],
+                        [
+                            "xpath=//button[contains(.,'Preview Size')]",
+                            "xpath:innerText"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "19c33c0c-b55a-4590-b2f9-f8faada11f38",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=#beauty_advice > a",
+                    "targets": [
+                        [
+                            "css=#beauty_advice > a",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//a[contains(text(),'beauty advice')]",
+                            "xpath:link"
+                        ],
+                        [
+                            "xpath=//li[@id='beauty_advice']/a",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//ul[5]/li/a",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "a934d504-e6c4-4c4b-970f-4e808eb87155",
+                    "comment": "",
+                    "command": "mouseOver",
+                    "target": "css=.brandHeadingbox:nth-child(1)",
+                    "targets": [
+                        [
+                            "css=.brandHeadingbox:nth-child(1)",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//a[contains(text(),'Popular')]",
+                            "xpath:link"
+                        ],
+                        [
+                            "xpath=//div[@id='headerMenu']/div/ul[2]/li/ul/li/section[2]/div/a",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=(//a[contains(@href, '/')])[3687]",
+                            "xpath:href"
+                        ],
+                        [
+                            "xpath=//section[2]/div/a",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "ab66cbdf-3426-43fd-b2ec-8bf7dbc67717",
+                    "comment": "",
+                    "command": "doubleClick",
+                    "target": "linkText=Nyri",
+                    "targets": [
+                        [
+                            "linkText=Nyri",
+                            "linkText"
+                        ],
+                        [
+                            "css=.glamnfitstoreBox:nth-child(1) li:nth-child(1) > a",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//a[contains(text(),'Nyri')]",
+                            "xpath:link"
+                        ],
+                        [
+                            "xpath=//div[@id='NykaaDesignStudio']/div/div[4]/div/ul/li/a",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//a[contains(@href, 'https://www.nykaafashion.com/designers/nyri/c/14963')]",
+                            "xpath:href"
+                        ],
+                        [
+                            "xpath=//ul[4]/li/ul/li/section/div/div/div/div[4]/div/ul/li/a",
+                            "xpath:position"
+                        ],
+                        [
+                            "xpath=//a[contains(.,'Nyri')]",
+                            "xpath:innerText"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "48426b17-5804-4ee0-bbd4-4ac474f2fa1a",
+                    "comment": "",
+                    "command": "click",
+                    "target": "css=.css-mbegxw .css-oryfdq:nth-child(1) > .css-1w3aihp",
+                    "targets": [
+                        [
+                            "css=.css-mbegxw .css-oryfdq:nth-child(1) > .css-1w3aihp",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=(//img[@alt='Banner Image'])[3]",
+                            "xpath:img"
+                        ],
+                        [
+                            "xpath=//main[@id='mainContent']/div[2]/div[4]/div/a/img",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//div[4]/div/a/img",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "8e553bee-98b1-46d2-813f-b8ed18d0b647",
+                    "comment": "",
+                    "command": "mouseOver",
+                    "target": "id=1",
+                    "targets": [
+                        [
+                            "id=1",
+                            "id"
+                        ],
+                        [
+                            "css=.css-0:nth-child(2) .plp-prod:nth-child(1) #\\31",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//img[@alt='Twenty Dresses by Nykaa Fashion-Beige Solid Lapel Collar Jumpsuit with Belt (Set of 2)-1']",
+                            "xpath:img"
+                        ],
+                        [
+                            "xpath=//img[@id='1']",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//main[@id='mainContent']/div[4]/div/div/div[2]/div/div/a/section/div/div/div/div/img",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//div/img",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "29a09774-2995-4c98-8209-6d4f92d717d5",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,106.4000015258789)",
+                    "targets": [],
+                    "value": ""
+                },
+                {
+                    "id": "67ee7a85-e02a-4125-b3eb-9dddc6cdde4e",
+                    "comment": "",
+                    "command": "click",
+                    "target": "id=1",
+                    "targets": [
+                        [
+                            "id=1",
+                            "id"
+                        ],
+                        [
+                            "css=.css-0:nth-child(2) .plp-prod:nth-child(1) #\\31",
+                            "css:finder"
+                        ],
+                        [
+                            "xpath=//img[@alt='Twenty Dresses by Nykaa Fashion-Beige Solid Lapel Collar Jumpsuit with Belt (Set of 2)-1']",
+                            "xpath:img"
+                        ],
+                        [
+                            "xpath=//img[@id='1']",
+                            "xpath:attributes"
+                        ],
+                        [
+                            "xpath=//main[@id='mainContent']/div[4]/div/div/div[2]/div/div/a/section/div/div/div/div/img",
+                            "xpath:idRelative"
+                        ],
+                        [
+                            "xpath=//section/div/div/div/div/img",
+                            "xpath:position"
+                        ]
+                    ],
+                    "value": ""
+                },
+                {
+                    "id": "7e909d2f-a590-42cf-b01e-c0ce9294df12",
+                    "comment": "",
+                    "command": "runScript",
+                    "target": "window.scrollTo(0,0)",
+                    "targets": [],
+                    "value": ""
+                }
+            ]
+        }
+    ],
+    "suites": [
+        {
+            "id": "0418e6c2-5824-41d2-9195-2bfd8742550a",
+            "name": "Default Suite",
+            "persistSession": false,
+            "parallel": false,
+            "timeout": 300,
+            "tests": [
+                "e0b63f03-0548-4fb8-bff9-d32650a9ac23"
+            ]
+        }
+    ],
+    "urls": [
+        "https://www.nykaa.com/"
+    ],
+    "plugins": []
 }
