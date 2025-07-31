@@ -25,4 +25,4 @@ jobs:
         npm install -g chromedriver
 
     - name: Run Selenium IDE Test (.side file)
-      run: selenium-side-runner sovrn.co
+      run: selenium-side-runner sovrn.side
