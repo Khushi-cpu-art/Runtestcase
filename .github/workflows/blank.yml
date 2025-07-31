@@ -19,10 +19,13 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install selenium-side-runner and dependencies
+    - name: Install Selenium IDE runner
       run: |
         npm install -g selenium-side-runner
         npm install -g chromedriver
 
-    - name: Run Selenium IDE Test (.side file)
+    - name: Set Chrome path for selenium-side-runner (Windows)
+      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $GITHUB_ENV
+
+    - name: Run Selenium IDE Test
       run: selenium-side-runner sovrn.side
