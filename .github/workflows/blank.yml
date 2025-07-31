@@ -1,0 +1,28 @@
+name: Run Selenium IDE .side File
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-tests:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install selenium-side-runner and dependencies
+      run: |
+        npm install -g selenium-side-runner
+        npm install -g chromedriver
+
+    - name: Run Selenium IDE Test (.side file)
+      run: selenium-side-runner sovrn.co
