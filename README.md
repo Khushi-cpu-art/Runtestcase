@@ -1,0 +1,2 @@
+# Runtestcase
+Runalltestcases
