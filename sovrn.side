@@ -70,17 +70,6 @@
       "targets": [],
       "value": ""
     }, {
-      "id": "8444a378-0c76-4e5a-939c-4181a5f6bdc4",
-      "comment": "",
-      "command": "click",
-      "target": "css=#\\36 88a36d06f1cd079b1786191 .outline-wrapper",
-      "targets": [
-        ["css=#\\36 88a36d06f1cd079b1786191 .outline-wrapper", "css:finder"],
-        ["xpath=//div[@id='688a36d06f1cd079b1786191']/div/div/div[3]", "xpath:idRelative"],
-        ["xpath=//div[2]/div[8]/div/div[2]/div/div/div/div/div/div/div/div[3]", "xpath:position"]
-      ],
-      "value": ""
-    }, {
       "id": "09cd7adb-c45b-4946-83ab-9c271ecb1298",
       "comment": "",
       "command": "runScript",
