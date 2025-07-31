@@ -236,15 +236,6 @@
         ["xpath=//main[@id='mainContent']/div[4]/div/div/div[2]/div/div/a/section/div/div/div/div/img", "xpath:idRelative"],
         ["xpath=//section/div/div/div/div/img", "xpath:position"]
       ],
-      "value": ""
-    }, {
-      "id": "7e909d2f-a590-42cf-b01e-c0ce9294df12",
-      "comment": "",
-      "command": "runScript",
-      "target": "window.scrollTo(0,0)",
-      "targets": [],
-      "value": ""
-    }]
   }],
   "suites": [{
     "id": "0418e6c2-5824-41d2-9195-2bfd8742550a",
