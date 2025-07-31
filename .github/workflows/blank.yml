@@ -25,25 +25,22 @@ jobs:
         npm install -g chromedriver
 
     - name: Set Chrome path for Windows
-      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $GITHUB_ENV
+      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
 
-    - name: Run Selenium IDE Test and Generate Report
+    - name: Run Selenium IDE Test and Save Logs
       run: |
-        mkdir -p test-reports
-        selenium-side-runner --output-directory test-reports --output-format junit --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side
+        mkdir test-reports
+        selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side > test-reports/test-log.txt
 
     - name: Upload Test Report as Artifact
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: selenium-report
+        name: selenium-test-log
         path: test-reports/
 
-    - name: Add Test Report to Summary
+    - name: Add Test Log to Summary
       if: always()
       run: |
-        echo '### Selenium Test Report (JUnit XML)' >> $GITHUB_STEP_SUMMARY
-        for file in test-reports/*.xml; do
-          echo "#### $file" >> $GITHUB_STEP_SUMMARY
-          cat "$file" >> $GITHUB_STEP_SUMMARY
-        done
+        echo "### Selenium Test Log" >> $env:GITHUB_STEP_SUMMARY
+        Get-Content test-reports/test-log.txt -Raw | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
