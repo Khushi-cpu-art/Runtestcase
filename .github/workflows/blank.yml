@@ -1,9 +1,7 @@
-name: Run Selenium IDE Tests with Email Report
+name: Run Selenium IDE Tests with Screenshot Email
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
 
 jobs:
@@ -24,10 +22,6 @@ jobs:
           npm install -g selenium-side-runner
           npm install -g chromedriver
 
-      - name: Set Chrome path
-        run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
-        shell: pwsh
-
       - name: Create reports directory
         run: mkdir test-reports
         shell: pwsh
@@ -38,21 +32,22 @@ jobs:
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE tests and generate HTML report
-        # Adjust this command depending on your report generation setup!
+      - name: Run Selenium IDE tests
         run: |
-          selenium-side-runner --output-directory test-reports --output-format html sovrn.side
-          # Rename report to include timestamp
-          Rename-Item -Path test-reports\report.html -NewName "report-$env:TIMESTAMP.html"
+          selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
 
-      - name: Upload test report as artifact (optional)
+      - name: Zip screenshots
+        run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
+        shell: pwsh
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: selenium-test-report
-          path: test-reports/report-${{ env.TIMESTAMP }}.html
+          name: selenium-screenshots
+          path: test-reports/report-${{ env.TIMESTAMP }}.zip
 
-      - name: Email HTML Report
+      - name: Email ZIP of screenshots
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -60,14 +55,14 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Selenium Test Report - ${{ github.repository }} - ${{ env.TIMESTAMP }}
+          subject: Selenium Screenshots - ${{ github.repository }} - ${{ env.TIMESTAMP }}
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_USERNAME }}
           body: |
             Hello,
 
-            The Selenium IDE test suite has completed. Attached is the full HTML report with screenshots.
+            Selenium IDE test has completed. Attached are the screenshots.
 
             Regards,
             GitHub Actions
-          attachments: test-reports/report-${{ env.TIMESTAMP }}.html
+          attachments: test-reports/report-${{ env.TIMESTAMP }}.zip
