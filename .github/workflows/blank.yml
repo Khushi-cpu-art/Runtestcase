@@ -1,81 +1,73 @@
-name: Run Selenium IDE .side File with Email Report
+name: Run Selenium IDE Tests with Email Report
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   run-tests:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-    - name: Install Dependencies
-      run: |
-        npm install -g selenium-side-runner
-        npm install -g chromedriver
+      - name: Install Selenium IDE Runner and ChromeDriver
+        run: |
+          npm install -g selenium-side-runner
+          npm install -g chromedriver
 
-    - name: Set Chrome path
-      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
+      - name: Set Chrome path
+        run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
+        shell: pwsh
 
-    - name: Create reports folder
-      run: mkdir test-reports
+      - name: Create reports directory
+        run: mkdir test-reports
+        shell: pwsh
 
-    - name: Run Selenium IDE Test
-      shell: pwsh
-      run: |
-        $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-        selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side `
-          *> "test-reports/test-log-$timestamp.txt"
+      - name: Set timestamp
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-    - name: Generate HTML Report with Screenshots
-      if: always()
-      shell: pwsh
-      run: |
-        $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        $reportPath = "test-reports/report.html"
-        Set-Content $reportPath "<html><body>"
-        Add-Content $reportPath "<h2>Selenium Test Report - $timestamp</h2>"
-        Add-Content $reportPath "<h3>Execution Log</h3><pre>"
-        Get-Content (Get-ChildItem test-reports\test-log-*.txt) | ForEach-Object { Add-Content $reportPath $_ }
-        Add-Content $reportPath "</pre><h3>Screenshots</h3>"
-        Get-ChildItem test-reports -Filter *.png | ForEach-Object {
-          Add-Content $reportPath "<div><p>$($_.Name)</p><img src='$($_.Name)' width='600'/></div>"
-        }
-        Add-Content $reportPath "</body></html>"
+      - name: Run Selenium IDE tests and generate HTML report
+        # Adjust this command depending on your report generation setup!
+        run: |
+          selenium-side-runner --output-directory test-reports --output-format html sovrn.side
+          # Rename report to include timestamp
+          Rename-Item -Path test-reports\report.html -NewName "report-$env:TIMESTAMP.html"
+        shell: pwsh
 
-    - name: Upload Artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: selenium-test-report
-        path: test-reports/
+      - name: Upload test report as artifact (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-test-report
+          path: test-reports/report-${{ env.TIMESTAMP }}.html
 
-    - name: Send Email with Report
-      if: always()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 587
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: Selenium Test Report - ${{ github.repository }}
-        to: ${{ secrets.EMAIL_TO }}
-        from: ${{ secrets.EMAIL_USERNAME }}
-        body: |
-          Hello,
+      - name: Email HTML Report
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Selenium Test Report - ${{ github.repository }} - ${{ env.TIMESTAMP }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_USERNAME }}
+          body: |
+            Hello,
 
-          The Selenium test has completed. Please find the attached report with logs and screenshots.
+            The Selenium IDE test suite has completed. Attached is the full HTML report with screenshots.
 
-          Regards,
-          GitHub Actions
-        attachments: test-reports/report.html
+            Regards,
+            GitHub Actions
+          attachments: test-reports/report-${{ env.TIMESTAMP }}.html
