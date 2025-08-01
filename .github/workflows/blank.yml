@@ -19,46 +19,48 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install Selenium IDE runner and dependencies
+    - name: Install Dependencies
       run: |
         npm install -g selenium-side-runner
         npm install -g chromedriver
 
-    - name: Set Chrome path for selenium-side-runner
-      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $GITHUB_ENV
+    - name: Set Chrome path
+      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
 
-    - name: Create reports directory
+    - name: Create reports folder
       run: mkdir test-reports
 
-    - name: Run Selenium IDE Test and Save Log
+    - name: Run Selenium IDE Test
+      shell: pwsh
       run: |
         $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
         selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side `
-        > "test-reports/test-log-$timestamp.txt"
+          *> "test-reports/test-log-$timestamp.txt"
 
-    - name: Generate HTML report with screenshots
+    - name: Generate HTML Report with Screenshots
       if: always()
+      shell: pwsh
       run: |
         $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         $reportPath = "test-reports/report.html"
-        Add-Content $reportPath "<html><body>"
+        Set-Content $reportPath "<html><body>"
         Add-Content $reportPath "<h2>Selenium Test Report - $timestamp</h2>"
-        Add-Content $reportPath "<h3>Log Output</h3><pre>"
-        Get-Content (Get-ChildItem test-reports/test-log-*.txt) | ForEach-Object { Add-Content $reportPath $_ }
+        Add-Content $reportPath "<h3>Execution Log</h3><pre>"
+        Get-Content (Get-ChildItem test-reports\test-log-*.txt) | ForEach-Object { Add-Content $reportPath $_ }
         Add-Content $reportPath "</pre><h3>Screenshots</h3>"
         Get-ChildItem test-reports -Filter *.png | ForEach-Object {
           Add-Content $reportPath "<div><p>$($_.Name)</p><img src='$($_.Name)' width='600'/></div>"
         }
         Add-Content $reportPath "</body></html>"
 
-    - name: Upload Test Artifacts
+    - name: Upload Artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: selenium-test-report
         path: test-reports/
 
-    - name: Email HTML Report
+    - name: Send Email with Report
       if: always()
       uses: dawidd6/action-send-mail@v3
       with:
@@ -72,7 +74,7 @@ jobs:
         body: |
           Hello,
 
-          The Selenium test completed. Attached is the full HTML report with screenshots.
+          The Selenium test has completed. Please find the attached report with logs and screenshots.
 
           Regards,
           GitHub Actions
