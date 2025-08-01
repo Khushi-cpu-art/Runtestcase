@@ -1,4 +1,4 @@
-name: Run Selenium IDE .side File with Report
+name: Run Selenium IDE .side File with Email Report
 
 on:
   push:
@@ -44,3 +44,25 @@ jobs:
       run: |
         echo "### Selenium Test Log" >> $env:GITHUB_STEP_SUMMARY
         Get-Content test-reports/test-log.txt -Raw | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
+
+    - name: Email test report
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: Selenium Test Report - ${{ github.repository }}
+        to: ${{ secrets.EMAIL_TO }}
+        from: ${{ secrets.EMAIL_USERNAME }}
+        body: |
+          Hello,
+
+          The Selenium test run has completed.
+
+          Please find the test log attached.
+
+          Regards,
+          GitHub Actions
+        attachments: test-reports/test-log.txt
