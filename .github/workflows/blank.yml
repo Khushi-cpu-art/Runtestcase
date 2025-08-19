@@ -23,13 +23,35 @@ jobs:
       run: |
         npm install -g selenium-side-runner
         npm install -g chromedriver
+
     - name: Set Chrome path for Windows
       run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
 
-    - name: Run Selenium IDE Test and Save Logs
+    - name: Run Selenium IDE Test and Save Logs (with timestamps & status)
+      shell: pwsh
       run: |
         mkdir test-reports
-        selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side > test-reports/test-log.txt
+        $logFile = "test-reports/test-log.txt"
+        $startTime = Get-Date
+        "Test started at: $startTime" | Out-File $logFile
+
+        selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side 2>&1 | ForEach-Object {
+          "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') - $_"
+        } | Tee-Object -FilePath $logFile -Append
+
+        $endTime = Get-Date
+        $duration = $endTime - $startTime
+        "Test ended at: $endTime" | Out-File $logFile -Append
+        "Test duration: $($duration.TotalSeconds) seconds" | Out-File $logFile -Append
+
+        if ($LASTEXITCODE -eq 0) {
+          "TEST RESULT: PASS" | Out-File $logFile -Append
+        } else {
+          "TEST RESULT: FAIL" | Out-File $logFile -Append
+        }
+
+        exit $LASTEXITCODE
+
     - name: Upload Test Report as Artifact
       if: always()
       uses: actions/upload-artifact@v4
@@ -42,6 +64,7 @@ jobs:
       run: |
         echo "### Selenium Test Log" >> $env:GITHUB_STEP_SUMMARY
         Get-Content test-reports/test-log.txt -Raw | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
+
     - name: Email test report
       if: always()
       uses: dawidd6/action-send-mail@v3
