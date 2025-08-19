@@ -1,4 +1,4 @@
-name: Run Selenium IDE Tests with Screenshot Email
+name: Run Selenium IDE .side File with Email Report
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -32,39 +32,40 @@ jobs:
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE tests
-        run: |
-          selenium-side-runner --output-directory test-reports sovrn.side
+      - name: Run Selenium IDE Tests
+        run: selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
         shell: pwsh
 
-      - name: Zip screenshots
-        run: |
-          Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
+      - name: Zip test report
+        run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
         shell: pwsh
 
-      - name: Upload artifact
+      - name: Upload test report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: selenium-screenshots
+          name: selenium-report
           path: test-reports/report-${{ env.TIMESTAMP }}.zip
 
-      - name: Email ZIP of screenshots
+      - name: Email the test report
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
-          username: ${{ secrets.SMTP_USERNAME }}
+          username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Selenium Screenshots - ${{ github.repository }} - ${{ env.TIMESTAMP }}
+          subject: Selenium Test Report - ${{ github.repository }} - ${{ env.TIMESTAMP }}
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_USERNAME }}
           body: |
             Hello,
 
-            Selenium IDE test has completed.
+            The Selenium IDE tests have completed successfully.
 
-            Attached are the screenshots.
+            Repository: ${{ github.repository }}
+            Timestamp: ${{ env.TIMESTAMP }}
+
+            Please find the test report attached.
 
             Regards,  
             GitHub Actions
