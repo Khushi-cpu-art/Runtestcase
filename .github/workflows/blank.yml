@@ -29,30 +29,17 @@ jobs:
       - name: Set timestamp
         shell: pwsh
         run: |
-          $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
       - name: Run Selenium IDE tests
-        run: |
-          selenium-side-runner --output-directory test-reports sovrn.side
+        run: selenium-side-runner --output-directory test-reports --timeout 180000 --config jest.config.js sovrn.side
         shell: pwsh
+        env:
+          JEST_JASMINE_TIMEOUT: 180000
 
-      - name: List contents of test-reports
-        run: Get-ChildItem -Recurse test-reports
-        shell: pwsh
-
-      - name: Zip screenshots
-        run: |
-          Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
-        shell: pwsh
-
-      - name: Confirm ZIP exists before upload
-        run: |
-          if (Test-Path "test-reports\report-${{ env.TIMESTAMP }}.zip") {
-            Write-Output "✅ ZIP file found. Proceeding to upload and email."
-          } else {
-            Write-Error "❌ ZIP file not found!"
-          }
+      - name: Zip reports
+        run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
         shell: pwsh
 
       - name: Upload artifact
@@ -75,7 +62,7 @@ jobs:
           body: |
             Hello,
 
-            The Selenium IDE test has completed. Please find the attached screenshots.
+            Selenium IDE test has completed. Attached are the screenshots.
 
             Regards,
             GitHub Actions
