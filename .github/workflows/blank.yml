@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE Runner globally
+      - name: Install Selenium IDE Runner
         run: npm install -g selenium-side-runner
         shell: pwsh
 
@@ -25,10 +25,20 @@ jobs:
         run: mkdir test-reports
         shell: pwsh
 
-      - name: Run Selenium IDE tests with 3-min timeout
+      - name: Set timestamp for reports
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+
+      - name: Run Selenium IDE tests with timeout
         run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
         shell: pwsh
-        continue-on-error: true
+        continue-on-error: true  # ensures email sends even if tests fail
+
+      - name: Compress test report
+        shell: pwsh
+        run: Compress-Archive -Path test-reports\* -DestinationPath selenium-report-${{ env.TIMESTAMP }}.zip
 
       - name: Send test report via email
         uses: dawidd6/action-send-mail@v3
@@ -37,15 +47,4 @@ jobs:
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium IDE Test Report - Run #${{ github.run_number }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
-          body: |
-            Hi,
-
-            Please find attached the latest Selenium IDE test report.
-
-            Regards,
-            GitHub Actions Bot
-          attachments: test-reports/*.json
-          secure: true  # Set to true if SMTP requires SSL/TLS (like Gmail)
+          subject: "Selenium Test Report - Run #${{
