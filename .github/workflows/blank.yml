@@ -1,4 +1,4 @@
-name: Run Selenium IDE Tests and Email Report
+name: Run Selenium IDE Tests and Email PDF Report
 
 on:
   push:
@@ -17,8 +17,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE Runner
-        run: npm install -g selenium-side-runner
+      - name: Install dependencies
+        run: |
+          npm install -g selenium-side-runner
+          npm install json2html puppeteer
         shell: pwsh
 
       - name: Create reports directory
@@ -31,42 +33,52 @@ jobs:
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE tests
+      - name: Run Selenium IDE Tests
         run: selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
 
-      - name: Zip test report
-        run: Compress-Archive -Path test-reports\* -DestinationPath selenium-report-${{ env.TIMESTAMP }}.zip
+      - name: Generate PDF Report
+        run: |
+          node -e "
+            const fs = require('fs');
+            const { json2html } = require('json2html');
+            const puppeteer = require('puppeteer');
+
+            const jsonFile = fs.readdirSync('./test-reports').find(f => f.endsWith('.json'));
+            const json = JSON.parse(fs.readFileSync('./test-reports/' + jsonFile, 'utf-8'));
+            const htmlContent = '<h1>Selenium IDE Test Report</h1>' + json2html.render(json);
+
+            (async () => {
+              const browser = await puppeteer.launch();
+              const page = await browser.newPage();
+              await page.setContent(htmlContent);
+              await page.pdf({ path: `selenium-report-${process.env.TIMESTAMP}.pdf`, format: 'A4' });
+              await browser.close();
+            })();
+          "
         shell: pwsh
 
-      - name: Upload test report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-report-${{ env.TIMESTAMP }}
-          path: selenium-report-${{ env.TIMESTAMP }}.zip
-
-      - name: Send test report via email
-        if: always()  # ensures it runs even if tests fail
+      - name: Send report via email
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          from: ${{ secrets.EMAIL_USERNAME }}
+          from: ${{ secrets.EMAIL_FROM }}
           to: ${{ secrets.EMAIL_TO }}
-          subject: Selenium Test Report - Run #${{ github.run_number }}
+          subject: Selenium Test Report - ${{ github.repository }}
           body: |
             Hello,
 
-            The Selenium IDE tests have completed.
+            The Selenium IDE test has completed.
 
             Repository: ${{ github.repository }}
-            Run number: ${{ github.run_number }}
-            Timestamp: ${{ env.TIMESTAMP }}
+            Run Timestamp: ${{ env.TIMESTAMP }}
 
-            The test report is attached.
+            Please find the attached PDF test report.
 
             Regards,  
             GitHub Actions Bot
-          attachments: selenium-report-${{ env.TIMESTAMP }}.zip
+          attachments: selenium-report-${{ env.TIMESTAMP }}.pdf
