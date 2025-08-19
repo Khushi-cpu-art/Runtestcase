@@ -3,13 +3,14 @@ name: Run Selenium IDE Tests and Email Report
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   run-tests-and-email:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -17,52 +18,36 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE Runner globally
-        run: npm install -g selenium-side-runner
+      - name: Install dependencies
+        run: |
+          npm install selenium-side-runner jest jest-html-reporter
         shell: pwsh
 
       - name: Create reports directory
         run: mkdir test-reports
         shell: pwsh
 
-      - name: Run Selenium IDE tests with 3min timeout
-        id: run_tests
-        run: |
-          selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
-        shell: pwsh
-        continue-on-error: true
-
-      - name: Zip test reports
-        run: Compress-Archive -Path test-reports\* -DestinationPath selenium-report.zip
+      - name: Run Selenium IDE Tests via Jest
+        run: npx jest selenium-runner.test.js --config=jest.config.js
         shell: pwsh
 
-      - name: Parse test results and create summary
-        id: summary
-        run: |
-          if ($LASTEXITCODE -eq 0) {
-            echo "test_status=SUCCESS" >> $env:GITHUB_OUTPUT
-          } else {
-            echo "test_status=FAILURE" >> $env:GITHUB_OUTPUT
-          }
-        shell: pwsh
-
-      - name: Send email notification with attachment
+      - name: Send HTML report via Email
+        if: always()  # Send email even if tests fail
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium IDE Tests - ${{ steps.summary.outputs.test_status }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
-          content_type: text/html
+          subject: Selenium Test Report - ${{ github.run_number }}
+          to: your-email@example.com
+          from: ${{ secrets.EMAIL_USERNAME }}
           body: |
-            <h2>Selenium IDE Test Run - ${{ steps.summary.outputs.test_status }}</h2>
-            <p>Repository: <strong>${{ github.repository }}</strong></p>
-            <p>Run Number: <strong>${{ github.run_number }}</strong></p>
-            <p>Timestamp: <strong>${{ github.event.head_commit.timestamp }}</strong></p>
-            <p>Check <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">GitHub Actions Run</a> for full details.</p>
-            <p>The full test report is attached as a ZIP file.</p>
-            <p>Regards,<br>GitHub Actions Bot</p>
-          attachments: selenium-report.zip
+            Hello,
+
+            The Selenium IDE test run has completed.
+            Please find the attached test report.
+
+            Regards,
+            GitHub Actions Bot
+          attachments: test-reports/test-report.html
