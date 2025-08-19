@@ -47,7 +47,7 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-2"
         },
         {
@@ -60,7 +60,7 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-3"
         },
         {
@@ -73,7 +73,7 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-4"
         },
         {
@@ -86,7 +86,7 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-5"
         },
         {
@@ -99,12 +99,12 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-6"
         },
         {
           "id": "859669ec-84e0-4608-b7f7-596a2e80ad0e",
-          "comment": "",
+          "comment": "test-reports/homepage.png",
           "command": "runScript",
           "target": "window.scrollTo(0,2488)",
           "targets": [],
@@ -112,12 +112,12 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-7"
         },
         {
           "id": "09cd7adb-c45b-4946-83ab-9c271ecb1298",
-          "comment": "",
+          "comment": "test-reports/homepage.png",
           "command": "runScript",
           "target": "window.scrollTo(0,856)",
           "targets": [],
@@ -125,7 +125,7 @@
         },
         {
           "command": "takeScreenshot",
-          "target": "",
+          "target": "test-reports/homepage.png",
           "value": "scroll-8"
         }
       ]
