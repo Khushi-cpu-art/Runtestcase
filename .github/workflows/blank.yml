@@ -2,71 +2,61 @@ name: Run Selenium IDE .side File with Email Report
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   run-tests:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
 
-      - name: Install Selenium IDE Runner and ChromeDriver
-        run: |
-          npm install -g selenium-side-runner
-          npm install -g chromedriver
+    - name: Install Selenium-side-runner and ChromeDriver
+      run: |
+        npm install -g selenium-side-runner
+        npm install -g chromedriver
+    - name: Set Chrome path for Windows
+      run: echo "CHROME_BIN=C:\Program Files\Google\Chrome\Application\chrome.exe" >> $env:GITHUB_ENV
 
-      - name: Create reports directory
-        run: mkdir test-reports
-        shell: pwsh
+    - name: Run Selenium IDE Test and Save Logs
+      run: |
+        mkdir test-reports
+        selenium-side-runner --capabilities "goog:chromeOptions.args=[headless,no-sandbox,disable-gpu,window-size=1920,1080]" sovrn.side > test-reports/test-log.txt
+    - name: Upload Test Report as Artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: selenium-test-log
+        path: test-reports/
 
-      - name: Set timestamp
-        shell: pwsh
-        run: |
-          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
-
-      - name: Run Selenium IDE Tests
-        run: selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
-        shell: pwsh
-
-      - name: Zip test report
-        run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
-        shell: pwsh
-
-      - name: Upload test report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-report
-          path: test-reports/report-${{ env.TIMESTAMP }}.zip
-
-      - name: Email the test report
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Selenium Test Report - ${{ github.repository }} - ${{ env.TIMESTAMP }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_USERNAME }}
-          body: |
-            Hello,
-
-            The Selenium IDE tests have completed successfully.
-
-            Repository: ${{ github.repository }}
-            Timestamp: ${{ env.TIMESTAMP }}
-
-            Please find the test report attached.
-
-            Regards,  
-            GitHub Actions
-          attachments: test-reports/report-${{ env.TIMESTAMP }}.zip
+    - name: Add Test Log to Summary
+      if: always()
+      run: |
+        echo "### Selenium Test Log" >> $env:GITHUB_STEP_SUMMARY
+        Get-Content test-reports/test-log.txt -Raw | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
+    - name: Email test report
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: Selenium Test Report - ${{ github.repository }}
+        to: ${{ secrets.EMAIL_TO }}
+        from: ${{ secrets.EMAIL_USERNAME }}
+        body: |
+          Hello,
+          The Selenium test run has completed.
+          Please find the test log attached.
+          Regards,
+          GitHub Actions
+        attachments: test-reports/test-log.txt
