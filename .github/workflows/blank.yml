@@ -1,27 +1,26 @@
-name: Run Selenium IDE Tests and Email Report
+name: Run Selenium IDE Tests with Screenshot Email
 
 on:
   push:
     branches: [main]
 
 jobs:
-  run-tests-and-email:
+  run-tests:
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: Install Selenium IDE Runner and ChromeDriver
         run: |
           npm install -g selenium-side-runner
-          npm install
-        shell: pwsh
+          npm install -g chromedriver
 
       - name: Create reports directory
         run: mkdir test-reports
@@ -33,32 +32,40 @@ jobs:
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE Tests
-        run: selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
-        continue-on-error: true  # Avoid stopping on failure to still email results
-        shell: pwsh
-
-      - name: Generate HTML Report (custom script or logic)
+      - name: Run Selenium IDE tests
         run: |
-          echo "<html><body><h1>Selenium Test Report</h1><p>Run: $env:GITHUB_RUN_NUMBER</p><p>Timestamp: $env:TIMESTAMP</p></body></html>" > test-reports/test-report.html
+          selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
 
-      - name: Send HTML report via email
+      - name: Zip screenshots
+        run: |
+          Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
+        shell: pwsh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-screenshots
+          path: test-reports/report-${{ env.TIMESTAMP }}.zip
+
+      - name: Email ZIP of screenshots
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium Test Report - Run #${{ github.run_number }}
-          to: your-email@example.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Selenium Screenshots - ${{ github.repository }} - ${{ env.TIMESTAMP }}
+          to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_USERNAME }}
           body: |
             Hello,
 
-            The Selenium IDE tests have completed.
-            Please find the HTML report attached.
+            Selenium IDE test has completed.
+
+            Attached are the screenshots.
 
             Regards,  
-            GitHub Actions Bot
-          attachments: test-reports/test-report.html
+            GitHub Actions
+          attachments: test-reports/report-${{ env.TIMESTAMP }}.zip
