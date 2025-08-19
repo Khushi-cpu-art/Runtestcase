@@ -7,6 +7,7 @@
     {
       "id": "e0b63f03-0548-4fb8-bff9-d32650a9ac23",
       "name": "1",
+      "timeout": 180000,
       "commands": [
         {
           "id": "737e8f17-4e30-4ca2-8770-b89e03d700fb",
@@ -34,7 +35,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-1.png",
           "value": "scroll-1"
         },
         {
@@ -47,7 +48,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-2.png",
           "value": "scroll-2"
         },
         {
@@ -60,7 +61,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-3.png",
           "value": "scroll-3"
         },
         {
@@ -73,7 +74,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-4.png",
           "value": "scroll-4"
         },
         {
@@ -86,7 +87,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-5.png",
           "value": "scroll-5"
         },
         {
@@ -99,12 +100,12 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-6.png",
           "value": "scroll-6"
         },
         {
           "id": "859669ec-84e0-4608-b7f7-596a2e80ad0e",
-          "comment": "test-reports/homepage.png",
+          "comment": "",
           "command": "runScript",
           "target": "window.scrollTo(0,2488)",
           "targets": [],
@@ -112,12 +113,12 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-7.png",
           "value": "scroll-7"
         },
         {
           "id": "09cd7adb-c45b-4946-83ab-9c271ecb1298",
-          "comment": "test-reports/homepage.png",
+          "comment": "",
           "command": "runScript",
           "target": "window.scrollTo(0,856)",
           "targets": [],
@@ -125,7 +126,7 @@
         },
         {
           "command": "storeScreenshot",
-          "target": "test-reports/homepage.png",
+          "target": "test-reports/scroll-8.png",
           "value": "scroll-8"
         }
       ]
