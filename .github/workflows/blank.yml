@@ -28,15 +28,19 @@ jobs:
       - name: Run Selenium IDE tests with 3-min timeout
         run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
         shell: pwsh
-        continue-on-error: true  # So email still sends even if tests fail
+        continue-on-error: true
 
       - name: Send test report via email
-        uses: mikeal/sendmail@v2
+        uses: dawidd6/action-send-mail@v3
         with:
-          from: ${{ secrets.EMAIL_FROM }}
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: Selenium IDE Test Report - Run #${{ github.run_number }}
           to: ${{ secrets.EMAIL_TO }}
-          subject: Selenium IDE Test Report - ${{ github.run_number }}
-          text: |
+          from: ${{ secrets.EMAIL_FROM }}
+          body: |
             Hi,
 
             Please find attached the latest Selenium IDE test report.
@@ -44,8 +48,4 @@ jobs:
             Regards,
             GitHub Actions Bot
           attachments: test-reports/*.json
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          secure: false
+          secure: true  # Set to true if SMTP requires SSL/TLS (like Gmail)
