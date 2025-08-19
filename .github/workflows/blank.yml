@@ -1,4 +1,4 @@
-name: Run Selenium IDE Tests with Screenshot Email
+name: Run Selenium IDE Tests and Upload Report
 
 on:
   push:
@@ -9,22 +9,16 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: List repo files (debug)
-        run: dir
-        shell: pwsh
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE Runner and ChromeDriver
-        run: |
-          npm install -g selenium-side-runner
-          npm install -g chromedriver
+      - name: Install Selenium IDE Runner
+        run: npm install -g selenium-side-runner
         shell: pwsh
 
       - name: Create reports directory
@@ -38,42 +32,11 @@ jobs:
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
       - name: Run Selenium IDE tests
-        run: |
-          # Check if the .side file exists
-          if (Test-Path "sovrn.side") {
-            selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
-          } else {
-            Write-Error "sovrn.side file not found!"
-            exit 1
-          }
+        run: selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
 
-      - name: Zip test reports
-        run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
-        shell: pwsh
-
-      - name: Upload artifact
+      - name: Upload test report artifact
         uses: actions/upload-artifact@v4
         with:
-          name: selenium-screenshots
-          path: test-reports/report-${{ env.TIMESTAMP }}.zip
-
-      - name: Email ZIP of screenshots
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Selenium Screenshots - ${{ github.repository }} - ${{ env.TIMESTAMP }}
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_USERNAME }}
-          body: |
-            Hello,
-
-            Selenium IDE test has completed. Attached are the screenshots.
-
-            Regards,
-            GitHub Actions
-          attachments: test-reports/report-${{ env.TIMESTAMP }}.zip
+          name: selenium-test-report-${{ env.TIMESTAMP }}
+          path: test-reports/
