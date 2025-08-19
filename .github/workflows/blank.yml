@@ -2,7 +2,8 @@ name: Run Selenium IDE Tests and Email Report
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   run-tests-and-email:
@@ -15,18 +16,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
 
-      - name: Install dependencies
+      - name: Install Selenium IDE Runner and xml2js
         run: |
           npm install -g selenium-side-runner
           npm install xml2js
 
       - name: Run Selenium IDE tests
         run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
-
-      - name: List test reports
-        run: dir test-reports
 
       - name: Generate HTML report
         run: node generate-report-html.js
@@ -42,6 +40,5 @@ jobs:
           to: your-email@example.com
           from: ${{ secrets.EMAIL_USERNAME }}
           content_type: text/html
-          body: ${{ steps.generate_html_report.outputs.html }}
-        env:
-          # no env needed here
+          body: |
+            $(cat report.html)
