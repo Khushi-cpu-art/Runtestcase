@@ -34,11 +34,12 @@ jobs:
       - name: Run Selenium IDE tests with timeout
         run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
         shell: pwsh
-        continue-on-error: true  # ensures email sends even if tests fail
+        continue-on-error: true  # Send report even if tests fail
 
       - name: Compress test report
         shell: pwsh
-        run: Compress-Archive -Path test-reports\* -DestinationPath selenium-report-${{ env.TIMESTAMP }}.zip
+        run: |
+          Compress-Archive -Path test-reports\* -DestinationPath selenium-report-$env:TIMESTAMP.zip
 
       - name: Send test report via email
         uses: dawidd6/action-send-mail@v3
@@ -47,4 +48,21 @@ jobs:
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Selenium Test Report - Run #${{
+          subject: Selenium Test Report - Run #${{ github.run_number }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          body: |
+            Hello,
+
+            The Selenium IDE tests have completed.
+
+            Repository: ${{ github.repository }}
+            Run number: ${{ github.run_number }}
+            Timestamp: ${{ env.TIMESTAMP }}
+
+            The test report is attached.
+
+            Regards,  
+            GitHub Actions Bot
+          attachments: selenium-report-${{ env.TIMESTAMP }}.zip
+          secure: true
