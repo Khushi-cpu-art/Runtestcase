@@ -1,4 +1,4 @@
-name: Run Selenium IDE Tests and Email HTML Report
+name: Run Selenium IDE Tests and Email Report
 
 on:
   push:
@@ -9,48 +9,39 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-    - name: Install selenium-side-runner
-      run: npm install -g selenium-side-runner
+      - name: Install dependencies
+        run: |
+          npm install -g selenium-side-runner
+          npm install xml2js
 
-    - name: Run Selenium IDE tests with JSON output
-      run: selenium-side-runner --output-directory test-reports --output-format json sovrn.side
+      - name: Run Selenium IDE tests
+        run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
 
-    - name: Generate simple HTML report from JSON
-      id: gen_html
-      run: |
-        $json = Get-Content test-reports/results.json | ConvertFrom-Json
-        $html = @"
-        <html><body><h2>Selenium IDE Test Report</h2><table border=1 cellpadding=5><tr><th>Test</th><th>Status</th><th>Duration (ms)</th></tr>
-        "@
-        foreach ($test in $json) {
-          $name = $test.name
-          $status = $test.status
-          $color = if ($status -eq "passed") {"green"} else {"red"}
-          $duration = $test.duration
-          $html += "<tr><td>$name</td><td style='color:$color'>$status</td><td>$duration</td></tr>"
-        }
-        $html += "</table></body></html>"
-        # Output for next step
-        echo "::set-output name=html_body::$html"
-      shell: pwsh
+      - name: List test reports
+        run: dir test-reports
 
-    - name: Send email with HTML body
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.SMTP_PASSWORD }}
-        subject: Selenium IDE Test Report
-        to: ${{ secrets.EMAIL_TO }}
-        from: ${{ secrets.EMAIL_USERNAME }}
-        secure: true
-        body: ${{ steps.gen_html.outputs.html_body }}
+      - name: Generate HTML report
+        run: node generate-report-html.js
+
+      - name: Send email with HTML report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Selenium IDE Test Report
+          to: your-email@example.com
+          from: ${{ secrets.EMAIL_USERNAME }}
+          content_type: text/html
+          body: ${{ steps.generate_html_report.outputs.html }}
+        env:
+          # no env needed here
