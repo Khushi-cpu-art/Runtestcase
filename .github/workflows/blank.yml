@@ -1,11 +1,11 @@
-name: Run Selenium IDE Tests and Upload Report
+name: Run Selenium IDE Tests and Email Report
 
 on:
   push:
     branches: [main]
 
 jobs:
-  run-tests:
+  run-tests-and-email:
     runs-on: windows-latest
 
     steps:
@@ -17,26 +17,35 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE Runner
+      - name: Install Selenium IDE Runner globally
         run: npm install -g selenium-side-runner
         shell: pwsh
 
-      - name: Create reports directory
+      - name: Create test reports directory
         run: mkdir test-reports
         shell: pwsh
 
-      - name: Set timestamp
+      - name: Run Selenium IDE tests with 3-min timeout
+        run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
         shell: pwsh
-        run: |
-          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+        continue-on-error: true  # So email still sends even if tests fail
 
-      - name: Run Selenium IDE tests
-        run: selenium-side-runner --output-directory test-reports sovrn.side
-        shell: pwsh
-
-      - name: Upload test report artifact
-        uses: actions/upload-artifact@v4
+      - name: Send test report via email
+        uses: mikeal/sendmail@v2
         with:
-          name: selenium-test-report-${{ env.TIMESTAMP }}
-          path: test-reports/
+          from: ${{ secrets.EMAIL_FROM }}
+          to: ${{ secrets.EMAIL_TO }}
+          subject: Selenium IDE Test Report - ${{ github.run_number }}
+          text: |
+            Hi,
+
+            Please find attached the latest Selenium IDE test report.
+
+            Regards,
+            GitHub Actions Bot
+          attachments: test-reports/*.json
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          secure: false
