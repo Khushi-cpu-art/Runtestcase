@@ -1,4 +1,4 @@
-name: Run Selenium IDE Tests and Email PDF Report
+name: Run Selenium IDE Tests and Email HTML Report
 
 on:
   push:
@@ -9,76 +9,48 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
 
-      - name: Install dependencies
-        run: |
-          npm install -g selenium-side-runner
-          npm install json2html puppeteer
-        shell: pwsh
+    - name: Install selenium-side-runner
+      run: npm install -g selenium-side-runner
 
-      - name: Create reports directory
-        run: mkdir test-reports
-        shell: pwsh
+    - name: Run Selenium IDE tests with JSON output
+      run: selenium-side-runner --output-directory test-reports --output-format json sovrn.side
 
-      - name: Set timestamp
-        shell: pwsh
-        run: |
-          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+    - name: Generate simple HTML report from JSON
+      id: gen_html
+      run: |
+        $json = Get-Content test-reports/results.json | ConvertFrom-Json
+        $html = @"
+        <html><body><h2>Selenium IDE Test Report</h2><table border=1 cellpadding=5><tr><th>Test</th><th>Status</th><th>Duration (ms)</th></tr>
+        "@
+        foreach ($test in $json) {
+          $name = $test.name
+          $status = $test.status
+          $color = if ($status -eq "passed") {"green"} else {"red"}
+          $duration = $test.duration
+          $html += "<tr><td>$name</td><td style='color:$color'>$status</td><td>$duration</td></tr>"
+        }
+        $html += "</table></body></html>"
+        # Output for next step
+        echo "::set-output name=html_body::$html"
+      shell: pwsh
 
-      - name: Run Selenium IDE Tests
-        run: selenium-side-runner --output-directory test-reports sovrn.side
-        shell: pwsh
-
-      - name: Generate PDF Report
-        run: |
-          node -e "
-            const fs = require('fs');
-            const { json2html } = require('json2html');
-            const puppeteer = require('puppeteer');
-
-            const jsonFile = fs.readdirSync('./test-reports').find(f => f.endsWith('.json'));
-            const json = JSON.parse(fs.readFileSync('./test-reports/' + jsonFile, 'utf-8'));
-            const htmlContent = '<h1>Selenium IDE Test Report</h1>' + json2html.render(json);
-
-            (async () => {
-              const browser = await puppeteer.launch();
-              const page = await browser.newPage();
-              await page.setContent(htmlContent);
-              await page.pdf({ path: `selenium-report-${process.env.TIMESTAMP}.pdf`, format: 'A4' });
-              await browser.close();
-            })();
-          "
-        shell: pwsh
-
-      - name: Send report via email
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          from: ${{ secrets.EMAIL_FROM }}
-          to: ${{ secrets.EMAIL_TO }}
-          subject: Selenium Test Report - ${{ github.repository }}
-          body: |
-            Hello,
-
-            The Selenium IDE test has completed.
-
-            Repository: ${{ github.repository }}
-            Run Timestamp: ${{ env.TIMESTAMP }}
-
-            Please find the attached PDF test report.
-
-            Regards,  
-            GitHub Actions Bot
-          attachments: selenium-report-${{ env.TIMESTAMP }}.pdf
+    - name: Send email with HTML body
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.SMTP_PASSWORD }}
+        subject: Selenium IDE Test Report
+        to: ${{ secrets.EMAIL_TO }}
+        from: ${{ secrets.EMAIL_USERNAME }}
+        secure: true
+        body: ${{ steps.gen_html.outputs.html_body }}
