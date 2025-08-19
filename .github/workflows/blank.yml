@@ -3,25 +3,27 @@ name: Run Selenium IDE Tests and Email Report
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
   run-tests-and-email:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install Selenium IDE CLI
-        run: npm install -g selenium-side-runner
+      - name: Install dependencies
+        run: |
+          npm install -g selenium-side-runner
+          npm install
+        shell: pwsh
 
-      - name: Create test-reports directory
+      - name: Create reports directory
         run: mkdir test-reports
         shell: pwsh
 
@@ -31,16 +33,14 @@ jobs:
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE Tests (Extended Timeout)
+      - name: Run Selenium IDE Tests
         run: selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
-        continue-on-error: true
+        continue-on-error: true  # Avoid stopping on failure to still email results
+        shell: pwsh
 
-      - name: Generate HTML Report (basic)
+      - name: Generate HTML Report (custom script or logic)
         run: |
-          echo "<html><body><h1>Selenium Test Run - ${{ env.TIMESTAMP }}</h1>" > test-reports/test-report.html
-          echo "<pre>" >> test-reports/test-report.html
-          type test-reports\results-*.json >> test-reports/test-report.html 2>nul
-          echo "</pre></body></html>" >> test-reports/test-report.html
+          echo "<html><body><h1>Selenium Test Report</h1><p>Run: $env:GITHUB_RUN_NUMBER</p><p>Timestamp: $env:TIMESTAMP</p></body></html>" > test-reports/test-report.html
         shell: pwsh
 
       - name: Send HTML report via email
@@ -50,7 +50,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium Test Report - Run ${{ github.run_number }}
+          subject: Selenium Test Report - Run #${{ github.run_number }}
           to: your-email@example.com
           from: ${{ secrets.EMAIL_USERNAME }}
           body: |
@@ -59,6 +59,6 @@ jobs:
             The Selenium IDE tests have completed.
             Please find the HTML report attached.
 
-            Regards,
-            GitHub Actions
+            Regards,  
+            GitHub Actions Bot
           attachments: test-reports/test-report.html
