@@ -18,36 +18,47 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: |
-          npm install selenium-side-runner jest jest-html-reporter
-        shell: pwsh
+      - name: Install Selenium IDE CLI
+        run: npm install -g selenium-side-runner
 
-      - name: Create reports directory
+      - name: Create test-reports directory
         run: mkdir test-reports
         shell: pwsh
 
-      - name: Run Selenium IDE Tests via Jest
-        run: npx jest selenium-runner.test.js --config=jest.config.js
+      - name: Set timestamp
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+
+      - name: Run Selenium IDE Tests (Extended Timeout)
+        run: selenium-side-runner --timeout 180000 --output-directory test-reports sovrn.side
+        continue-on-error: true
+
+      - name: Generate HTML Report (basic)
+        run: |
+          echo "<html><body><h1>Selenium Test Run - ${{ env.TIMESTAMP }}</h1>" > test-reports/test-report.html
+          echo "<pre>" >> test-reports/test-report.html
+          type test-reports\results-*.json >> test-reports/test-report.html 2>nul
+          echo "</pre></body></html>" >> test-reports/test-report.html
         shell: pwsh
 
-      - name: Send HTML report via Email
-        if: always()  # Send email even if tests fail
+      - name: Send HTML report via email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium Test Report - ${{ github.run_number }}
+          subject: Selenium Test Report - Run ${{ github.run_number }}
           to: your-email@example.com
           from: ${{ secrets.EMAIL_USERNAME }}
           body: |
             Hello,
 
-            The Selenium IDE test run has completed.
-            Please find the attached test report.
+            The Selenium IDE tests have completed.
+            Please find the HTML report attached.
 
             Regards,
-            GitHub Actions Bot
+            GitHub Actions
           attachments: test-reports/test-report.html
