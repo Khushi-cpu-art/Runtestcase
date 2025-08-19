@@ -12,6 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: List repo files (debug)
+        run: dir
+        shell: pwsh
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -21,6 +25,7 @@ jobs:
         run: |
           npm install -g selenium-side-runner
           npm install -g chromedriver
+        shell: pwsh
 
       - name: Create reports directory
         run: mkdir test-reports
@@ -33,12 +38,17 @@ jobs:
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
       - name: Run Selenium IDE tests
-        run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
+        run: |
+          # Check if the .side file exists
+          if (Test-Path "sovrn.side") {
+            selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
+          } else {
+            Write-Error "sovrn.side file not found!"
+            exit 1
+          }
         shell: pwsh
-        env:
-          JEST_JASMINE_TIMEOUT: 180000
 
-      - name: Zip reports
+      - name: Zip test reports
         run: Compress-Archive -Path test-reports\* -DestinationPath test-reports\report-${{ env.TIMESTAMP }}.zip
         shell: pwsh
 
