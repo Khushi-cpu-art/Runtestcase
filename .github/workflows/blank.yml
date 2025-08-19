@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Selenium IDE tests
         run: |
-          selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
+          selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
 
       - name: List contents of test-reports
@@ -75,7 +75,7 @@ jobs:
           body: |
             Hello,
 
-            Selenium IDE test has completed. Attached are the screenshots and test results.
+            The Selenium IDE test has completed. Please find the attached screenshots.
 
             Regards,
             GitHub Actions
