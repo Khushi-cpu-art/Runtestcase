@@ -33,7 +33,7 @@ jobs:
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
       - name: Run Selenium IDE tests
-        run: selenium-side-runner --output-directory test-reports --timeout 180000 --config jest.config.js sovrn.side
+        run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
         shell: pwsh
         env:
           JEST_JASMINE_TIMEOUT: 180000
