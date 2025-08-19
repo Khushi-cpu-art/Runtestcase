@@ -33,8 +33,8 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
-          "target": "",
+          "command": "storeScreenshot",
+          "target": "test-reports/homepage.png",
           "value": "scroll-1"
         },
         {
@@ -46,7 +46,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-2"
         },
@@ -59,7 +59,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-3"
         },
@@ -72,7 +72,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-4"
         },
@@ -85,7 +85,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-5"
         },
@@ -98,7 +98,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-6"
         },
@@ -111,7 +111,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-7"
         },
@@ -124,7 +124,7 @@
           "value": ""
         },
         {
-          "command": "takeScreenshot",
+          "command": "storeScreenshot",
           "target": "test-reports/homepage.png",
           "value": "scroll-8"
         }
