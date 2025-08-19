@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -21,36 +21,41 @@ jobs:
         run: npm install -g selenium-side-runner
         shell: pwsh
 
-      - name: Create test reports directory
+      - name: Create reports directory
         run: mkdir test-reports
         shell: pwsh
 
-      - name: Set timestamp for reports
+      - name: Set timestamp
         shell: pwsh
         run: |
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
-      - name: Run Selenium IDE tests with timeout
-        run: selenium-side-runner --output-directory test-reports --timeout 180000 sovrn.side
+      - name: Run Selenium IDE tests
+        run: selenium-side-runner --output-directory test-reports sovrn.side
         shell: pwsh
-        continue-on-error: true  # Send report even if tests fail
 
-      - name: Compress test report
+      - name: Zip test report
+        run: Compress-Archive -Path test-reports\* -DestinationPath selenium-report-${{ env.TIMESTAMP }}.zip
         shell: pwsh
-        run: |
-          Compress-Archive -Path test-reports\* -DestinationPath selenium-report-$env:TIMESTAMP.zip
+
+      - name: Upload test report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-report-${{ env.TIMESTAMP }}
+          path: selenium-report-${{ env.TIMESTAMP }}.zip
 
       - name: Send test report via email
+        if: always()  # ensures it runs even if tests fail
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: Selenium Test Report - Run #${{ github.run_number }}
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          from: ${{ secrets.EMAIL_USERNAME }}
           to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
+          subject: Selenium Test Report - Run #${{ github.run_number }}
           body: |
             Hello,
 
@@ -65,4 +70,3 @@ jobs:
             Regards,  
             GitHub Actions Bot
           attachments: selenium-report-${{ env.TIMESTAMP }}.zip
-          secure: true
